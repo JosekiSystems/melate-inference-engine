@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# SQLite local database (opcional: ignóralo si prefieres que se regenere con el script)
+*.db
+
+# Node / React
+node_modules/
+frontend/node_modules/
+frontend/dist/
+.DS_Store
+
+# LaTeX (Archivos auxiliares temporales; preserva solo .tex y .pdf)
+Algoritmos/*.aux
+Algoritmos/*.log
+Algoritmos/*.synctex.gz
+Algoritmos/*.synctex(busy)
+Algoritmos/*.fls
+Algoritmos/*.fdb_latexmk
+Algoritmos/*.out
+Algoritmos/*.toc
+
+# VS Code & Windows
+.vscode/
+Thumbs.db
+*.lnk

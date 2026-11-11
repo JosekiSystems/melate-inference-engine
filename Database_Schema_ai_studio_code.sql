@@ -1,0 +1,19 @@
+CREATE TABLE IF NOT EXISTS melate_draws (
+    concurso INT PRIMARY KEY,
+    draw_id BIGINT,
+    r1 INT NOT NULL CHECK (r1 BETWEEN 1 AND 56),
+    r2 INT NOT NULL CHECK (r2 BETWEEN 1 AND 56),
+    r3 INT NOT NULL CHECK (r3 BETWEEN 1 AND 56),
+    r4 INT NOT NULL CHECK (r4 BETWEEN 1 AND 56),
+    r5 INT NOT NULL CHECK (r5 BETWEEN 1 AND 56),
+    r6 INT NOT NULL CHECK (r6 BETWEEN 1 AND 56),
+    r7 INT NOT NULL CHECK (r7 BETWEEN 1 AND 56), -- Adicional
+    bolsa BIGINT NOT NULL,
+    fecha DATE NOT NULL,
+    repetidos INT DEFAULT 0,
+    media NUMERIC(4, 1),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_melate_fecha ON melate_draws(fecha DESC);
+CREATE INDEX IF NOT EXISTS idx_melate_balls ON melate_draws(r1, r2, r3, r4, r5, r6);

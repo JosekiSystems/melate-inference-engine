@@ -1,0 +1,1 @@
+pip install fastapi uvicorn pandas numpy sqlalchemy psycopg2-binary python-dotenv

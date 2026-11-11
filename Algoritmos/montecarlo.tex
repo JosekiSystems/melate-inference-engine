@@ -1,0 +1,94 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{enumitem}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+
+\begin{document}
+
+\subsection*{1. ¿Se hizo una simulación Monte Carlo?}
+
+\textbf{Sí, en su variante de Muestreo por Aceptación y Rechazo (\textit{Acceptance-Rejection Sampling}).}
+
+En lugar de calcular analíticamente las probabilidades conjuntas sobre las $32,468,436$ combinaciones con múltiples restricciones no lineales simultáneas (pesos empíricos, rango de suma, paridad y no consecutividad), el código implementa un \textbf{experimento estocástico repetido}:
+
+\begin{enumerate}
+    \item \textbf{Distribución instrumental (Propuesta):} \\
+    Se define un vector de probabilidades $\mathbf{p} = (p_1, p_2, \dots, p_{56})$ normalizado ($\sum p_i = 1$) que distorsiona la distribución uniforme con base en la evidencia histórica (pesos por frecuencia o rezago).
+    
+    \item \textbf{Generación de variables pseudoaleatorias:} \\
+    Se ejecuta una selección sin reemplazo:
+    $$X^{(k)} \sim \text{Multinomial}(\mathbf{p}, 6)$$
+    
+    \item \textbf{Criterio de Aceptación/Rechazo:} \\
+    Se evalúa si la muestra $X^{(k)}$ satisface simultáneamente las funciones indicadoras de la región objetivo $\Omega_{\text{objetivo}}$:
+    $$\mathbb{I}_{\text{suma}}\big(X^{(k)}\big) \times \mathbb{I}_{\text{paridad}}\big(X^{(k)}\big) \times \mathbb{I}_{\text{adyacencia}}\big(X^{(k)}\big) = 1$$
+    \begin{itemize}
+        \item Si el producto es $1$, el estado se acepta como candidato viable.
+        \item Si es $0$, el estado se descarta (\textit{rechazo}) y el contador de iteraciones $k \to k+1$ continúa hasta converger al número solicitado de combinaciones.
+    \end{itemize}
+\end{enumerate}
+
+\textit{(Nota teórica: Es un método Monte Carlo de muestreo condicional, no una simulación masiva de horizonte temporal largo para calcular probabilidades de ruina o valor esperado acumulado).}
+
+\medskip
+\hrule
+\medskip
+
+\subsection*{2. Índice Metodológico para el Análisis de Espacios Muestrales Futuros}
+
+Este índice sirve como marco de referencia formal para modelar cualquier juego de azar o sistema combinatorio finito discreto (Melate, Revancha, Chispazo, Tris, etc.):
+
+\begin{enumerate}[label=\textbf{\arabic*.}]
+    \item \textbf{TOPOLOGÍA DEL ESPACIO MUESTRAL}
+    \begin{enumerate}[label=\textbf{1.\arabic*}]
+        \item Definición del alfabeto o conjunto base $S = \{1, 2, \dots, N\}$.
+        \item Dimensión de la tupla ($k$ lugares sin reemplazo / con reemplazo).
+        \item Cardinalidad teórica del espacio ($|\Omega| = C(N, k)$ ó $P(N, k)$).
+        \item Medida de probabilidad base (Espacio equiprobable de Laplace: $P(\omega) = \frac{1}{|\Omega|}$).
+    \end{enumerate}
+
+    \item \textbf{PROYECCIÓN Y PARTICIÓN MEDIANTE VARIABLES ALEATORIAS}
+    \begin{enumerate}[label=\textbf{2.\arabic*}]
+        \item Variable de Suma Total: $S(\omega) = \sum r_i$ y su función de masa inducida.
+        \item Variable de Paridad: Número de éxitos en distribución hipergeométrica/binomial.
+        \item Variable de Dispersión / Amplitud: $R(\omega) = \max(\omega) - \min(\omega)$.
+        \item Detección de subconjuntos de alta densidad (Regiones hipervolumétricas con mayor $\frac{|A|}{|\Omega|}$).
+    \end{enumerate}
+
+    \item \textbf{CONTRASTE EMPÍRICO CONTRA EL HISTORIAL $D$}
+    \begin{enumerate}[label=\textbf{3.\arabic*}]
+        \item Vector de frecuencias marginales observadas $\mathbf{f} = (f_1, \dots, f_N)$.
+        \item Prueba de hipótesis de bondad de ajuste (Chi-cuadrada: $H_0: p_i = \frac{1}{N}$).
+        \item Función de supervivencia y rezago (Distribución geométrica del tiempo entre éxitos).
+        \item Matriz de co-ocurrencia (Frecuencia empírica de pares y ternas observadas).
+    \end{enumerate}
+
+    \item \textbf{INFERENCIA Y MODELADO PROBABILÍSTICO}
+    \begin{enumerate}[label=\textbf{4.\arabic*}]
+        \item Inferencia Bayesiana: Actualización de \textit{priors} mediante verosimilitud histórica.
+        \item Cadenas de Markov de primer orden: $P(X_{t+1} = j \mid X_t = i)$.
+        \item Ponderación de entropía máxima sujeta a restricciones empíricas.
+        \item Condicionamiento del espacio: Restricción a la subálgebra $\Omega^* \subset \Omega$.
+    \end{enumerate}
+
+    \item \textbf{MÉTODOS ESTOCÁSTICOS DE EXTRACCIÓN (MONTE CARLO)}
+    \begin{enumerate}[label=\textbf{5.\arabic*}]
+        \item Muestreo por Aceptación y Rechazo (\textit{Rejection Sampling}).
+        \item Muestreo de Importancia (\textit{Importance Sampling} para eventos raros).
+        \item Algoritmo Metropolis-Hastings / MCMC (para espacios de estados complejos).
+        \item Simulación de Monte Carlo cruda (Convergencia por Ley Fuerte de Grandes Números).
+    \end{enumerate}
+
+    \item \textbf{EVALUACIÓN Y VALIDACIÓN DEL MODELO}
+    \begin{enumerate}[label=\textbf{6.\arabic*}]
+        \item \textit{Backtesting}: Rendimiento del modelo evaluado contra sorteos pasados ($t-n$ hasta $t$).
+        \item Entropía de Shannon del generador (Medición del grado de aleatoriedad vs. determinismo).
+        \item Tasa de aceptación del algoritmo (Eficiencia computacional del muestreador).
+    \end{enumerate}
+\end{enumerate}
+
+\end{document}
